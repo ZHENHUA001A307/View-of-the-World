@@ -2,7 +2,7 @@ name: EPUB to RSS Pusher Short
 
 on:
   schedule:
-    - cron: '0 0 * * 6' 
+    - cron: '0 0 * * 2,5' 
   workflow_dispatch: # 支持手动触发
 
 permissions:
@@ -47,7 +47,7 @@ jobs:
           if not os.path.exists('books_short'): os.makedirs('books_short', exist_ok=True)
 
           try:
-              with open('progress.txt', 'r') as f:
+              with open('progress_short.txt', 'r') as f:
                   current_index = int(f.read().strip())
           except:
               current_index = 1
@@ -127,7 +127,7 @@ jobs:
           # --- 后续处理：计算字数/生成RSS/清理 ---
           word_count = len(BeautifulSoup(content_html, 'html.parser').get_text().strip())
           reading_time = math.ceil(word_count / READING_SPEED)
-          time_header = f"<p style='color: #888;'>⏱ 预计阅读时间：{reading_time} 分钟 ({word_count} 字)</p><hr>"
+          time_header = f"<p style='color: #888;'>? 预计阅读时间：{reading_time} 分钟 ({word_count} 字)</p><hr>"
           content_html = time_header + content_html
 
           pub_date = datetime.datetime.now().strftime('%a, %d %b %Y %H:%M:%S +0000')
@@ -165,13 +165,13 @@ jobs:
           </rss>"""
 
           with open('feed.xml', 'w', encoding='utf-8') as f: f.write(rss_feed)
-          with open('progress.txt', 'w') as f: f.write(str(current_index + 1))
+          with open('progress_short.txt', 'w') as f: f.write(str(current_index + 1))
           EOF
 
       - name: Commit and Push
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          git add feed.xml progress.txt image/
+          git add feed.xml progress_short.txt image/
           git commit -m "Update RSS: content & images" || echo "Nothing to commit"
           git push
