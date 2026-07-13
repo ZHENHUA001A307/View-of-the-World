@@ -44,7 +44,7 @@ jobs:
           # ==========================================
 
           if not os.path.exists('image'): os.makedirs('image', exist_ok=True)
-          if not os.path.exists('books'): os.makedirs('books', exist_ok=True)
+          if not os.path.exists('books_short'): os.makedirs('books_short', exist_ok=True)
 
           try:
               with open('progress.txt', 'r') as f:
@@ -54,9 +54,9 @@ jobs:
 
           search_str = f"{current_index:0>3}"
           target_file = None
-          for f in os.listdir('books'):
+          for f in os.listdir('books_short'):
               if search_str in f and f.lower().endswith('.epub'):
-                  target_file = os.path.join('books', f)
+                  target_file = os.path.join('books_short', f)
                   break
 
           if not target_file:
