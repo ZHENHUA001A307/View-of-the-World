@@ -1,4 +1,4 @@
-name: EPUB to RSS Pusher
+name: EPUB to RSS Pusher Short
 
 on:
   schedule:
